@@ -1,6 +1,7 @@
 # runtypes-pretty-validation
 
 validate [runtypes](https://github.com/pelotom/runtypes) schemas against a value, and reflect back a validation report matching the schema.
+Prettyifies structual error messages arbitrarily deep.
 
 ```ts
 const schema = rt.Record({ foo: rt.Literal("bar") });
@@ -18,12 +19,12 @@ t(schema, { foo: "bar" }); // undefined, all valid
 ## usage
 
 ```ts
-import { tojsonschema } from "runtypes-pretty-validation";
+import { validate } from "runtypes-pretty-validation";
 import * as rt from "runtypes";
 
-const myRtSchema = rt.Record({ foo: rt.Literal("bar") });
-const myjsonschema = tojsonschema(myRtSchema);
-// { type: "object", properties: { foo: { const: "bar" } } }
+const schema = rt.Record({ foo: rt.Literal("bar") });
+validate(schema, { foo: "baz" });
+// { foo: 'Expected "bar", received "baz" } }
 ```
 
 see [test.ts](./test.ts) for more.
