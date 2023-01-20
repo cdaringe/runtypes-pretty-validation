@@ -1,0 +1,69 @@
+{
+  "name": "runtypes-pretty-validation",
+  "version": "0.0.0-semantic-release",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cdaringe/runtypes-pretty-validation.git"
+  },
+  "description": "convert runtypes schemas to jsonschema",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write .",
+    "lint": "prettier --check . && eslint '**/*.{ts,js}'",
+    "prepare": "husky install",
+    "semantic-release": "semantic-release",
+    "test_": "c8 -r=lcov -r=text-summary ava --verbose",
+    "test": "ava --verbose"
+  },
+  "keywords": [
+    "runtypes",
+    "validation",
+    "typescript",
+    "pretty"
+  ],
+  "author": "cdaringe",
+  "license": "ISC",
+  "devDependencies": {
+    "@commitlint/cli": "^17.4.1",
+    "@commitlint/config-conventional": "^17.4.0",
+    "@types/node": "^18.11.18",
+    "@typescript-eslint/eslint-plugin": "^5.48.1",
+    "@typescript-eslint/parser": "^5.48.1",
+    "ava": "5.1.1",
+    "c8": "^7.12.0",
+    "eslint": "^8.31.0",
+    "husky": "^8.0.3",
+    "jsonschema": "1.4.1",
+    "prettier": "^2.8.2",
+    "prettier-plugin-organize-imports": "^3.2.1",
+    "runtypes": "^6.6.0",
+    "semantic-release": "^20.0.2",
+    "ts-node": "10.9.1",
+    "typescript": "4.9.4"
+  },
+  "peerDependencies": {
+    "runtypes": "^6"
+  },
+  "ava": {
+    "files": [
+      "**/*.test.ts",
+      "./test.ts"
+    ],
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
+  },
+  "release": {
+    "branches": [
+      "main"
+    ]
+  }
+}
