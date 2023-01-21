@@ -1,13 +1,14 @@
 # runtypes-pretty-validation
 
-validate [runtypes](https://github.com/pelotom/runtypes) schemas against a value, and reflect back a validation report matching the schema.
-Prettyifies structual error messages arbitrarily deep.
+validate [runtypes](https://github.com/pelotom/runtypes) schemas against a value, and reflect back a pretty validation report, matching the schema.
+Prettyifies structural error messages arbitrarily deep.
 
 ```ts
+import { validate } from "runtypes-pretty-validation";
 const schema = rt.Record({ foo: rt.Literal("bar") });
-t(schema, null); // Expected object, got "null"
-t(schema, { bar: "bar" }); // { foo: 'Expected literal `bar`, but was `undefined`' }
-t(schema, { foo: "bar" }); // undefined, all valid
+validate(schema, null); // Expected object, got "null"
+validate(schema, { bar: "bar" }); // { foo: 'Expected literal `bar`, but was `undefined`' }
+validate(schema, { foo: "bar" }); // undefined, all valid
 ```
 
 [![main](https://github.com/cdaringe/runtypes-pretty-validation/actions/workflows/main.yml/badge.svg)](https://github.com/cdaringe/runtypes-pretty-validation/actions/workflows/main.yml)
@@ -16,15 +17,6 @@ t(schema, { foo: "bar" }); // undefined, all valid
 
 `npm install runtypes-pretty-validation`
 
-## usage
-
-```ts
-import { validate } from "runtypes-pretty-validation";
-import * as rt from "runtypes";
-
-const schema = rt.Record({ foo: rt.Literal("bar") });
-validate(schema, { foo: "baz" });
-// { foo: 'Expected "bar", received "baz" } }
-```
+## examples
 
 see [test.ts](./test.ts) for more.
