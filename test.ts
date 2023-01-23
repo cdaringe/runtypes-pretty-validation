@@ -40,6 +40,19 @@ test("useFirstUnionSchemaOnFail", (t) => {
     { baz: 1 },
     { useFirstUnionSchemaOnFail: true }
   );
-  console.log(JSON.stringify(result));
   t.like(result, { foo: "Expected string, but was undefined" });
+});
+
+test("useHighestKeyMatchRecordFailure", (t) => {
+  const schema = rt.Union(
+    rt.Record({ foo: rt.String }),
+    rt.Record({ bar: rt.Number })
+  );
+  debugger; // eslint-disable-line
+  const result = validate(
+    schema,
+    { bar: "should_be_a_number_to_pass_but_intentionally_failing" },
+    { useHighestKeyMatchRecordFailure: true }
+  );
+  t.like(result, { bar: "Expected number, but was string" });
 });

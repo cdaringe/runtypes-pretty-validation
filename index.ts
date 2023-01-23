@@ -28,8 +28,10 @@ export function validate<S extends rt.Runtype>(
   value: unknown,
   opts: {
     useFirstUnionSchemaOnFail?: boolean;
+    useHighestKeyMatchRecordFailure?: boolean;
   } = {
     useFirstUnionSchemaOnFail: false,
+    useHighestKeyMatchRecordFailure: false,
   }
 ): StructuralValidationResult {
   const r = schema.reflect;
@@ -58,11 +60,37 @@ export function validate<S extends rt.Runtype>(
     }
     case "union": {
       const firstSchema = r.alternatives[0];
-      const isValid = r.alternatives.some(
-        (subschema) => validate(subschema, value, opts) === undefined
-      );
+      const highestMatchRecordFailure: {
+        numKeysMatch: number;
+        result: StructuralValidationResult;
+      } = {
+        numKeysMatch: 0,
+        result: undefined,
+      };
+      const isValid = r.alternatives.some((subschema) => {
+        const result = validate(subschema, value, opts);
+        const isOk = result === undefined;
+        // discern highest matching record failure
+        if (!isOk && subschema.reflect.tag === "record") {
+          const fieldNames = new Set(Object.keys(subschema.reflect.fields));
+          const numKeysMatched = isPojo(value)
+            ? Object.keys(value).reduce(
+                (acc, key) => acc + (fieldNames.has(key) ? 1 : 0),
+                0
+              )
+            : 0;
+          if (numKeysMatched > highestMatchRecordFailure.numKeysMatch) {
+            highestMatchRecordFailure.numKeysMatch = numKeysMatched;
+            highestMatchRecordFailure.result = result;
+          }
+        }
+        return isOk;
+      });
       return isValid
         ? undefined
+        : opts.useHighestKeyMatchRecordFailure &&
+          highestMatchRecordFailure?.result
+        ? highestMatchRecordFailure?.result
         : opts?.useFirstUnionSchemaOnFail && firstSchema
         ? validate(firstSchema, value, opts)
         : `No alternative schemas in the union matched "${typeof value}"`;
