@@ -1,14 +1,8 @@
 import test from "ava";
 import * as rt from "runtypes";
-import { validate } from "./";
+import { validate } from "./index";
 
 test("basic", (t) => {
-  // readme example - start
-  // const myRtSchema = rt.Record({ foo: rt.Literal("bar") });
-  // const myjsonschema = tojsonschema(myRtSchema);
-  // console.log(JSON.stringify(myjsonschema));
-  // const out = { type: "object", properties: { foo: { const: "bar" } } };
-  // readme example - end
   const fooSchema = rt.Literal("foo");
   t.regex(validate(fooSchema, "bar") as string, /expected.*foo.*bar/i);
   t.is(validate(fooSchema, "foo"), undefined);
@@ -34,4 +28,18 @@ test("basic", (t) => {
       qux: "Failed constraint check for number: qux must be > 0",
     },
   });
+});
+
+test("useFirstUnionSchemaOnFail", (t) => {
+  const schema = rt.Union(
+    rt.Record({ foo: rt.String }),
+    rt.Record({ bar: rt.Number })
+  );
+  const result = validate(
+    schema,
+    { baz: 1 },
+    { useFirstUnionSchemaOnFail: true }
+  );
+  console.log(JSON.stringify(result));
+  t.like(result, { foo: "Expected string, but was undefined" });
 });

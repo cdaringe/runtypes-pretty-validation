@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "commonjs",
+    "allowJs": false,
     "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "module": "commonjs",
+    "noUncheckedIndexedAccess": true,
+    "outDir": "dist",
     "skipLibCheck": true,
-    "noUncheckedIndexedAccess": true
-  }
+    "strict": true,
+    "target": "esnext"
+  },
+  "exclude": ["dist", "node_modules"]
 }

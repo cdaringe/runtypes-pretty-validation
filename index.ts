@@ -25,14 +25,19 @@ type StructuralValidationResult =
 
 export function validate<S extends rt.Runtype>(
   schema: S,
-  value: unknown
+  value: unknown,
+  opts: {
+    useFirstUnionSchemaOnFail?: boolean;
+  } = {
+    useFirstUnionSchemaOnFail: false,
+  }
 ): StructuralValidationResult {
   const r = schema.reflect;
   switch (r.tag) {
     case "dictionary": {
       if (isPojo(value)) {
         return Object.entries(value).reduce((acc, [k, v]) => {
-          const child = validate(r.value, v);
+          const child = validate(r.value, v, opts);
           return child === undefined ? acc : { ...acc, [k]: child };
         }, {});
       } else {
@@ -42,7 +47,7 @@ export function validate<S extends rt.Runtype>(
     case "record": {
       if (isPojo(value)) {
         return Object.entries(r.fields).reduce((acc, [k, v]) => {
-          const child = validate(v, childValue(value, k));
+          const child = validate(v, childValue(value, k), opts);
           return child === undefined ? acc : { ...(acc || {}), [k]: child };
         }, undefined as undefined | { [key: string]: StructuralValidationResult });
       } else {
@@ -52,17 +57,20 @@ export function validate<S extends rt.Runtype>(
       }
     }
     case "union": {
+      const firstSchema = r.alternatives[0];
       const isValid = r.alternatives.some(
-        (subschema) => validate(subschema, value) === undefined
+        (subschema) => validate(subschema, value, opts) === undefined
       );
       return isValid
         ? undefined
+        : opts?.useFirstUnionSchemaOnFail && firstSchema
+        ? validate(firstSchema, value, opts)
         : `No alternative schemas in the union matched "${typeof value}"`;
     }
     case "tuple": {
       const results = r.components
         .map((subschema, i) => {
-          const result = validate(subschema, childValue(value, i));
+          const result = validate(subschema, childValue(value, i), opts);
           return result
             ? undefined
             : {

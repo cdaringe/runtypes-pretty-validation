@@ -3,3 +3,4 @@ node_modules
 !commitlint.config.js
 coverage
 *.d.ts
+dist

@@ -17,6 +17,16 @@ validate(schema, { foo: "bar" }); // undefined, all valid
 
 `npm install runtypes-pretty-validation`
 
+## options
+
+Options may be specified. See [./index.ts](./index.ts) for defaults.
+
+```ts
+validate(schema, value[, opts])
+```
+
+- `useFirstUnionSchemaOnFail: boolean`: if a validation fails all union members, report the schema validation errors from the first schema in the union.
+
 ## examples
 
 see [test.ts](./test.ts) for more.
