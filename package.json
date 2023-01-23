@@ -6,12 +6,12 @@
     "url": "https://github.com/cdaringe/runtypes-pretty-validation.git"
   },
   "description": "convert runtypes schemas to jsonschema",
-  "main": "./build/index.js",
+  "main": "./dist/index.js",
   "files": [
-    "build/index.js",
-    "build/index.d.ts"
+    "dist/index.js",
+    "dist/index.d.ts"
   ],
-  "types": "./build/index.d.ts",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write .",
