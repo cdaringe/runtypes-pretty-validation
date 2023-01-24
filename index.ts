@@ -13,16 +13,20 @@ const isPojo = (x: unknown): x is object =>
 const childValue = (parent: unknown, key: string | number) =>
   parent == null ? undefined : (parent as any)[key];
 
-export type IndexedStructuralValidationResult = {
+export type ArrayIndexedStructuralValidationResult = {
   index: number;
   result: StructuralValidationResult;
+};
+
+export type StringIndexedStructuralValidationResult = {
+  [key: string]: StructuralValidationResult;
 };
 
 export type StructuralValidationResult =
   | string
   | undefined
-  | IndexedStructuralValidationResult[]
-  | { [key: string]: StructuralValidationResult };
+  | ArrayIndexedStructuralValidationResult[]
+  | StringIndexedStructuralValidationResult;
 
 export function validate<S extends rt.Runtype>(
   schema: S,
@@ -107,7 +111,7 @@ export function validate<S extends rt.Runtype>(
                 result,
               };
         })
-        .filter(Boolean) as IndexedStructuralValidationResult[];
+        .filter(Boolean) as ArrayIndexedStructuralValidationResult[];
       return results.length ? undefined : results;
     }
     case "array":
