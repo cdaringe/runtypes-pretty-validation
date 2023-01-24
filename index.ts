@@ -13,11 +13,12 @@ const isPojo = (x: unknown): x is object =>
 const childValue = (parent: unknown, key: string | number) =>
   parent == null ? undefined : (parent as any)[key];
 
-type IndexedStructuralValidationResult = {
+export type IndexedStructuralValidationResult = {
   index: number;
   result: StructuralValidationResult;
 };
-type StructuralValidationResult =
+
+export type StructuralValidationResult =
   | string
   | undefined
   | IndexedStructuralValidationResult[]
